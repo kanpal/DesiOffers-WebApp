@@ -1,0 +1,31 @@
+﻿@{
+    ViewBag.Title = "About";
+}
+<h2>@ViewBag.Title.</h2>
+<h3>@ViewBag.Message</h3>
+
+<div class="jumbotron">
+    <h1>Desi Offers</h1>
+    <p class="lead">Your one stop to buy and sell.</p>
+    <p><a href="http://www.kanpal.net" class="btn btn-primary btn-lg">See more &raquo;</a> <a href="~/Content/Apps/desioffers.apk" class="btn btn-primary btn-lg">Download Android App</a> </p>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <h2>Getting started</h2>
+        <p>
+            We’re building a local marketplace where the well-being of buyers and sellers comes first.
+        </p>
+        <p><a class="btn btn-default" href='@Url.Action("Register", "Account")'>Sign Up &raquo;</a></p>
+    </div>
+    <div class="col-md-4">
+        <h2>Buyer Safety</h2>
+        <p>Take a look at the user’s profile. Some things you can look for are past ratings, a photo, and TruYou. If you are unsure about something you can always ask, or look for users who already have a strong rating on DesiOffers.</p>
+        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
+    </div>
+    <div class="col-md-4">
+        <h2>Seller Safety</h2>
+        <p>A successful transaction starts with a great post. Include an original photo of your item and a detailed description. Make sure you state the condition of an item, and clearly outline all defects or damage. Remember to make sure your listing follows our Posting Rules.</p>
+        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
+    </div>
+</div>

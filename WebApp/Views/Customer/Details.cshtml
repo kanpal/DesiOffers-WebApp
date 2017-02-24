@@ -1,0 +1,111 @@
+﻿@model WebLogic.ViewModels.CustomerViewModel
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{
+    ViewBag.Title = "Customer Details";
+}
+
+@Styles.Render("~/Content/jsGrid")
+@Scripts.Render("~/Scripts/jsGrid")
+
+<h2>@Model.FullName</h2>
+<hr />
+
+<div class="row">
+    <div class="col-xs-8 col-md-5">
+        <img src="@Url.Action("GetCustomer", "ImageStore", new { id = Model.ProfileImageID })" alt="@Model.FullName" class="img-thumbnail" width="240" />
+    </div>
+    <div class="col-xs-8 col-md-7">
+        <dl class="dl-horizontal">
+
+            <dt>
+                @Html.DisplayNameFor(model => model.City):
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.City)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.ZipCode):
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.ZipCode)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.PhoneNumber):
+            </dt>
+
+            <dd>
+                <a href="tel:@Model.PhoneNumber">@Html.DisplayFor(model => model.PhoneNumber)</a>
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.EmailId):
+            </dt>
+
+            <dd>
+                <a href="mailto://@Model.EmailId">@Html.DisplayFor(model => model.EmailId)</a>
+            </dd>
+
+        </dl>
+
+    </div>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
+
+<span style="color:red;" id="message"></span>
+<h4>Transactions</h4>
+
+<div id="transctionsGrid"></div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+    });
+
+    $("#transctionsGrid").jsGrid({
+        width: "100%",
+        height: "200px",
+
+        filtering: false,
+        //inserting: true,
+        //editing: true,
+        sorting: false,
+        paging: true,
+        autoload: true,
+
+        controller: {
+            loadData: function (filter) {
+
+                return $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("ListTransactions")',
+                    data: { id: @Model.ID },
+                    dataType: "json"
+                });
+            }
+        },
+
+        noDataContent: "No Transactions found",
+        loadMessage: "Loading Transactions",
+        pagesize: 5,
+
+        fields: [
+            { name: "ID", type: "number", width: 30 },
+            { name: "Type", type: "text", width: 100 },
+            //{ name: "Type", type: "select", items: categories, valueField: "Value", textField: "Text", width: 70 },
+            { name: "CustomerName", type: "text", title: "Customer", width: 100 },
+            //{ name: "Description", type: "text", width: 150 },
+            { name: "PriceFormatted", type: "text", title: "Offer Price", width: 50 },
+            { name: "Date", type: "text", title: "Date", width: 90 }
+        ]
+    });
+
+</script>

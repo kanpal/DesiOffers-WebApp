@@ -1,0 +1,140 @@
+﻿@model WebLogic.ViewModels.ProductViewModel
+
+@{
+    ViewBag.Title = "Product Details";
+}
+
+@Styles.Render("~/Content/jsGrid")
+@Scripts.Render("~/Scripts/jsGrid")
+
+<h2>@Model.Name</h2>
+<h3 style="color:brown;">@Model.OfferPrice.ToString("C")</h3>
+<hr />
+
+<div class="row">
+    <div class="col-xs-8 col-md-5">
+        <img src="@Url.Action("GetProduct", "ImageStore", new { id = Model.ImageStoreID })" alt="@Model.Description" class="img-thumbnail" width="240" />
+    </div>
+    <div class="col-xs-8 col-md-7">
+        <dl class="dl-horizontal">
+
+            <dt>
+                @Html.DisplayNameFor(model => model.CategoryName):
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.CategoryName)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.CustomerName):
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.CustomerName)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.OfferPrice):
+            </dt>
+
+            <dd>
+                <b>$@Html.DisplayFor(model => model.OfferPrice)</b>
+            </dd>
+
+        </dl>
+        <span>
+            <button value="makeOffer" id="makeOffer" class="btn btn-default">Make an Offer $</button>
+            <button value="askQuestion" class="btn btn-default">Ask a Question ?</button>
+            <button value="addToList" class="btn btn-default">Add to List &hearts;</button>
+        </span>
+
+        <div id="offerWindow" style="display:none;">
+            @*form method="post" action="@Url.Action("MakeOffer", new { id = Model.ID } )"*@
+                Offer Price: <input type="text" id="offerPrice" /> <button class="btn btn-default" id="submitOffer">Submit Offer</button>
+            @*</form>*@
+        </div>
+    </div>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
+
+<span style="color:red;" id="message"></span>
+<h4>Offers/Transactions</h4>
+
+<div id="transctionsGrid"></div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#offerWindow").dialog({
+            autoOpen: false,
+            title: 'Make an Offer',
+            width: 500,
+            height: 'auto',
+            modal: true
+        });
+
+        $("#makeOffer").button().on("click", function () {
+            $("#offerWindow").dialog("open");
+        });
+
+        $("#submitOffer").button().on("click", submitOffer);
+    });
+
+    function submitOffer() {
+        $("#offerWindow").dialog("close");
+        $.ajax({
+            method: "post",
+            url: '@Url.Action("MakeOffer")',
+            data: { offerPrice: $("#offerPrice").val(), id: @Model.ID }
+        })
+        .done(function (data) {
+            $("#message").html(data.message);
+            if (data.result) {
+                // Refresh the transaction grid
+                $("#transctionsGrid").jsGrid("render");
+            }
+        });
+    }
+
+    $("#transctionsGrid").jsGrid({
+        width: "100%",
+        height: "200px",
+
+        filtering: false,
+        //inserting: true,
+        //editing: true,
+        sorting: false,
+        paging: true,
+        autoload: true,
+
+        controller: {
+            loadData: function (filter) {
+
+                return $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("ListTransactions")',
+                    data: { id: @Model.ID },
+                    dataType: "json"
+                });
+            }
+        },
+
+        noDataContent: "No Transactions found",
+        loadMessage: "Loading Transactions",
+        pagesize: 5,
+
+        fields: [
+            { name: "ID", type: "number", width: 30 },
+            { name: "Type", type: "text", width: 100 },
+            //{ name: "Type", type: "select", items: categories, valueField: "Value", textField: "Text", width: 70 },
+            { name: "CustomerName", type: "text", title: "Customer", width: 100 },
+            //{ name: "Description", type: "text", width: 150 },
+            { name: "PriceFormatted", type: "text", title: "Offer Price", width: 50 },
+            { name: "Date", type: "text", title: "Date", width: 90 }
+        ]
+    });
+
+</script>

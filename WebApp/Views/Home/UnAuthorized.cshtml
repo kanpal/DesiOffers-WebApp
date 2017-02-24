@@ -1,0 +1,17 @@
+﻿
+@{
+    ViewBag.Title = "Unauthroized!";
+}
+
+<h2>Unauthroized</h2>
+
+<h3>@ViewBag.Message</h3>
+
+<p>
+    You are unauthoirzed to view this page/area.
+</p>
+
+<p>
+    @Html.ActionLink("Click here to Login", "Login", new { controller = "Account", returnUrl = ViewBag.ReturnUrl })
+</p>
+

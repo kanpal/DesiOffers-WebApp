@@ -1,0 +1,63 @@
+﻿@{
+    ViewBag.Title = "Customers";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@Styles.Render("~/Content/jsGrid")
+@Scripts.Render("~/Scripts/jsGrid")
+
+
+<h2>Customer Listing</h2>
+
+<div id="customersGrid"></div>
+
+<script>
+
+    $("#customersGrid").jsGrid({
+    width: "100%",
+        height: "800px",
+
+        filtering: true,
+        //inserting: true,
+        //editing: true,
+        sorting: true,
+        paging: true,
+        autoload: true,
+
+        controller: {
+            loadData: function (filter) {
+
+                return $.ajax({
+                type: "POST",
+                    url: '@Url.Action("List")',
+                    data: filter,
+                    dataType: "json"
+                });
+            }
+        },
+
+        noDataContent: "No Products found",
+        loadMessage: "Loading Products",
+        pagesize: 25,
+
+        fields: [
+            { name: "ID", type: "number", width: 30, itemTemplate: detailsTemplate },
+            { name: "FirstName", type: "text", title: "First Name", width: 70, itemTemplate: detailsTemplate },
+            { name: "LastName", type: "text", title: "Last Name", width: 70 },
+            { name: "City", type: "text", width: 60 },
+            { name: "ZipCode", type: "text", title: "Zip", width: 40 },
+            { name: "EmailId", type: "text", title: "Email", width: 70 },
+            { name: "PhoneNumber", type: "text", title: "Phone", width: 60 },
+            { name: "Verified", type: "checkbox", width:30 },
+            { name: "Active", type: "checkbox", width:30 },
+            { type: "control" }
+        ]
+    });
+
+    function detailsTemplate(value, item) {
+        var url = '@Url.Action("Details")' + "?id=" + item.ID;
+        return "<a href='" + url + "'>" + value + "</a>"
+    }
+
+</script>
+

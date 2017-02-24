@@ -1,0 +1,655 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="DesiOffersModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Category">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="255" />
+          <Property Name="ParentID" Type="bigint" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="UpdatedDate" Type="datetime" />
+          <Property Name="Active" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Customer">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserId" Type="varchar" MaxLength="125" />
+          <Property Name="Password" Type="varchar" MaxLength="40" />
+          <Property Name="FirstName" Type="varchar" MaxLength="125" />
+          <Property Name="LastName" Type="varchar" MaxLength="125" />
+          <Property Name="City" Type="varchar" MaxLength="50" />
+          <Property Name="ZipCode" Type="varchar" MaxLength="10" />
+          <Property Name="PhoneNumber" Type="varchar" MaxLength="18" />
+          <Property Name="EmailId" Type="varchar" MaxLength="150" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="LastLogin" Type="datetime" />
+          <Property Name="Verified" Type="bit" />
+          <Property Name="Active" Type="bit" />
+          <Property Name="ProfileImageID" Type="bigint" />
+        </EntityType>
+        <EntityType Name="FilePathRoot">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FullPath" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="Type" Type="char" MaxLength="1" />
+          <Property Name="AllowWrite" Type="bit" />
+          <Property Name="AllowRead" Type="bit" />
+        </EntityType>
+        <EntityType Name="ImageStore">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FilePath" Type="varchar" MaxLength="255" />
+          <Property Name="FilePathRootID" Type="bigint" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Product">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="255" />
+          <Property Name="CategoryID" Type="bigint" />
+          <Property Name="CustomerID" Type="bigint" />
+          <Property Name="Tags" Type="varchar" MaxLength="1024" />
+          <Property Name="OfferPrice" Type="money" />
+          <Property Name="MinPrice" Type="money" />
+          <Property Name="PrimaryImageStoreID" Type="bigint" />
+        </EntityType>
+        <EntityType Name="ProductImages">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="bigint" Nullable="false" />
+          <Property Name="ProductID" Type="bigint" Nullable="false" />
+          <Property Name="ImageStoreID" Type="bigint" Nullable="false" />
+          <Property Name="Active" Type="bit" />
+        </EntityType>
+        <EntityType Name="TransactionLine">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ProductID" Type="bigint" />
+          <Property Name="CategoryID" Type="bigint" />
+          <Property Name="CustomerID" Type="bigint" />
+          <Property Name="Title" Type="varchar" MaxLength="250" />
+          <Property Name="Description" Type="varchar" MaxLength="500" />
+          <Property Name="Condition" Type="varchar" MaxLength="250" />
+          <Property Name="SellerID" Type="bigint" />
+          <Property Name="OfferPrice" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="TransactionType" Type="char" MaxLength="2" />
+          <Property Name="Sold" Type="bit" Nullable="false" />
+          <Property Name="SoldDate" Type="datetime" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="UpdateDate" Type="datetime" />
+          <Property Name="Active" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ZipCode">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="bigint" Nullable="false" />
+          <Property Name="Zipcode" Type="varchar" MaxLength="50" />
+          <Property Name="ZipCodeType" Type="varchar" MaxLength="50" />
+          <Property Name="City" Type="varchar" MaxLength="50" />
+          <Property Name="State" Type="varchar" MaxLength="50" />
+          <Property Name="LocationType" Type="varchar" MaxLength="50" />
+          <Property Name="Lat" Type="float" />
+          <Property Name="Long" Type="float" />
+          <Property Name="Xaxis" Type="float" />
+          <Property Name="Yaxis" Type="float" />
+          <Property Name="Zaxis" Type="float" />
+          <Property Name="WorldRegion" Type="varchar" MaxLength="50" />
+          <Property Name="Country" Type="varchar" MaxLength="50" />
+          <Property Name="LocationText" Type="varchar" MaxLength="50" />
+          <Property Name="Location" Type="varchar" MaxLength="50" />
+          <Property Name="Decommisioned" Type="bit" />
+          <Property Name="TaxReturnsFiled" Type="varchar" MaxLength="50" />
+          <Property Name="EstimatedPopulation" Type="varchar" MaxLength="50" />
+          <Property Name="TotalWages" Type="varchar" MaxLength="50" />
+          <Property Name="Notes" Type="varchar" MaxLength="1048" />
+        </EntityType>
+        <Association Name="FK_Product_Category">
+          <End Role="Category" Type="Self.Category" Multiplicity="0..1" />
+          <End Role="Product" Type="Self.Product" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Category">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Product">
+              <PropertyRef Name="CategoryID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Product_Customer">
+          <End Role="Customer" Type="Self.Customer" Multiplicity="0..1" />
+          <End Role="Product" Type="Self.Product" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Customer">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Product">
+              <PropertyRef Name="CustomerID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Product_ImageStore">
+          <End Role="ImageStore" Type="Self.ImageStore" Multiplicity="0..1" />
+          <End Role="Product" Type="Self.Product" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ImageStore">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Product">
+              <PropertyRef Name="PrimaryImageStoreID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductImages_ImageStore">
+          <End Role="ImageStore" Type="Self.ImageStore" Multiplicity="1" />
+          <End Role="ProductImages" Type="Self.ProductImages" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ImageStore">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ProductImages">
+              <PropertyRef Name="ImageStoreID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductImages_Product">
+          <End Role="Product" Type="Self.Product" Multiplicity="1" />
+          <End Role="ProductImages" Type="Self.ProductImages" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ProductImages">
+              <PropertyRef Name="ProductID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TransactionLine_Customer">
+          <End Role="Customer" Type="Self.Customer" Multiplicity="0..1" />
+          <End Role="TransactionLine" Type="Self.TransactionLine" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Customer">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="TransactionLine">
+              <PropertyRef Name="CustomerID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TransactionLine_Product">
+          <End Role="Product" Type="Self.Product" Multiplicity="0..1" />
+          <End Role="TransactionLine" Type="Self.TransactionLine" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="TransactionLine">
+              <PropertyRef Name="ProductID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="DesiOffersModelStoreContainer">
+          <EntitySet Name="Category" EntityType="Self.Category" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Customer" EntityType="Self.Customer" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="FilePathRoot" EntityType="Self.FilePathRoot" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ImageStore" EntityType="Self.ImageStore" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Product" EntityType="Self.Product" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ProductImages" EntityType="Self.ProductImages" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TransactionLine" EntityType="Self.TransactionLine" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ZipCode" EntityType="Self.ZipCode" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Product_Category" Association="Self.FK_Product_Category">
+            <End Role="Category" EntitySet="Category" />
+            <End Role="Product" EntitySet="Product" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Product_Customer" Association="Self.FK_Product_Customer">
+            <End Role="Customer" EntitySet="Customer" />
+            <End Role="Product" EntitySet="Product" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Product_ImageStore" Association="Self.FK_Product_ImageStore">
+            <End Role="ImageStore" EntitySet="ImageStore" />
+            <End Role="Product" EntitySet="Product" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductImages_ImageStore" Association="Self.FK_ProductImages_ImageStore">
+            <End Role="ImageStore" EntitySet="ImageStore" />
+            <End Role="ProductImages" EntitySet="ProductImages" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductImages_Product" Association="Self.FK_ProductImages_Product">
+            <End Role="Product" EntitySet="Product" />
+            <End Role="ProductImages" EntitySet="ProductImages" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TransactionLine_Customer" Association="Self.FK_TransactionLine_Customer">
+            <End Role="Customer" EntitySet="Customer" />
+            <End Role="TransactionLine" EntitySet="TransactionLine" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TransactionLine_Product" Association="Self.FK_TransactionLine_Product">
+            <End Role="Product" EntitySet="Product" />
+            <End Role="TransactionLine" EntitySet="TransactionLine" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="DesiOffersModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="DesiOfferEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="ZipCodes" EntityType="DesiOffersModel.ZipCode" />
+          <EntitySet Name="FilePathRoots" EntityType="DesiOffersModel.FilePathRoot" />
+          <EntitySet Name="Products" EntityType="DesiOffersModel.Product" />
+          <EntitySet Name="ProductImages" EntityType="DesiOffersModel.ProductImage" />
+          <AssociationSet Name="FK_ProductImages_Product" Association="DesiOffersModel.FK_ProductImages_Product">
+            <End Role="Product" EntitySet="Products" />
+            <End Role="ProductImage" EntitySet="ProductImages" />
+          </AssociationSet>
+          <EntitySet Name="Categories" EntityType="DesiOffersModel.Category" />
+          <EntitySet Name="Customers" EntityType="DesiOffersModel.Customer" />
+          <AssociationSet Name="FK_Product_Category" Association="DesiOffersModel.FK_Product_Category">
+            <End Role="Category" EntitySet="Categories" />
+            <End Role="Product" EntitySet="Products" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Product_Customer" Association="DesiOffersModel.FK_Product_Customer">
+            <End Role="Customer" EntitySet="Customers" />
+            <End Role="Product" EntitySet="Products" />
+          </AssociationSet>
+          <EntitySet Name="ImageStores" EntityType="DesiOffersModel.ImageStore" />
+          <AssociationSet Name="FK_Product_ImageStore" Association="DesiOffersModel.FK_Product_ImageStore">
+            <End Role="ImageStore" EntitySet="ImageStores" />
+            <End Role="Product" EntitySet="Products" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductImages_ImageStore" Association="DesiOffersModel.FK_ProductImages_ImageStore">
+            <End Role="ImageStore" EntitySet="ImageStores" />
+            <End Role="ProductImage" EntitySet="ProductImages" />
+          </AssociationSet>
+          <EntitySet Name="TransactionLines" EntityType="DesiOffersModel.TransactionLine" />
+          <AssociationSet Name="FK_TransactionLine_Customer" Association="DesiOffersModel.FK_TransactionLine_Customer">
+            <End Role="Customer" EntitySet="Customers" />
+            <End Role="TransactionLine" EntitySet="TransactionLines" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TransactionLine_Product" Association="DesiOffersModel.FK_TransactionLine_Product">
+            <End Role="Product" EntitySet="Products" />
+            <End Role="TransactionLine" EntitySet="TransactionLines" />
+          </AssociationSet>
+          </EntityContainer>
+        <EntityType Name="ZipCode">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int64" Nullable="false" />
+          <Property Name="Zipcode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ZipCodeType" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="City" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="State" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="LocationType" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Lat" Type="Double" />
+          <Property Name="Long" Type="Double" />
+          <Property Name="Xaxis" Type="Double" />
+          <Property Name="Yaxis" Type="Double" />
+          <Property Name="Zaxis" Type="Double" />
+          <Property Name="WorldRegion" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Country" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="LocationText" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Location" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Decommisioned" Type="Boolean" />
+          <Property Name="TaxReturnsFiled" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="EstimatedPopulation" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="TotalWages" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Notes" Type="String" MaxLength="1048" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="FilePathRoot">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FullPath" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Type" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="AllowWrite" Type="Boolean" />
+          <Property Name="AllowRead" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="Product">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="CategoryID" Type="Int64" />
+          <Property Name="CustomerID" Type="Int64" />
+          <Property Name="Tags" Type="String" MaxLength="1024" FixedLength="false" Unicode="false" />
+          <Property Name="OfferPrice" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="MinPrice" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="PrimaryImageStoreID" Type="Int64" />
+          <NavigationProperty Name="ProductImages" Relationship="DesiOffersModel.FK_ProductImages_Product" FromRole="Product" ToRole="ProductImage" />
+          <NavigationProperty Name="Category" Relationship="DesiOffersModel.FK_Product_Category" FromRole="Product" ToRole="Category" />
+          <NavigationProperty Name="Customer" Relationship="DesiOffersModel.FK_Product_Customer" FromRole="Product" ToRole="Customer" />
+          <NavigationProperty Name="ImageStore" Relationship="DesiOffersModel.FK_Product_ImageStore" FromRole="Product" ToRole="ImageStore" />
+          <NavigationProperty Name="TransactionLines" Relationship="DesiOffersModel.FK_TransactionLine_Product" FromRole="Product" ToRole="TransactionLine" />
+        </EntityType>
+        <EntityType Name="ProductImage">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int64" Nullable="false" />
+          <Property Name="ProductID" Type="Int64" Nullable="false" />
+          <Property Name="ImageStoreID" Type="Int64" Nullable="false" />
+          <Property Name="Active" Type="Boolean" />
+          <NavigationProperty Name="Product" Relationship="DesiOffersModel.FK_ProductImages_Product" FromRole="ProductImage" ToRole="Product" />
+          <NavigationProperty Name="ImageStore" Relationship="DesiOffersModel.FK_ProductImages_ImageStore" FromRole="ProductImage" ToRole="ImageStore" />
+        </EntityType>
+        <Association Name="FK_ProductImages_Product">
+          <End Type="DesiOffersModel.Product" Role="Product" Multiplicity="1" />
+          <End Type="DesiOffersModel.ProductImage" Role="ProductImage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ProductImage">
+              <PropertyRef Name="ProductID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Category">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="ParentID" Type="Int64" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="UpdatedDate" Type="DateTime" Precision="3" />
+          <Property Name="Active" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Products" Relationship="DesiOffersModel.FK_Product_Category" FromRole="Category" ToRole="Product" />
+        </EntityType>
+        <EntityType Name="Customer">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="String" MaxLength="125" FixedLength="false" Unicode="false" />
+          <Property Name="Password" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="FirstName" Type="String" MaxLength="125" FixedLength="false" Unicode="false" />
+          <Property Name="LastName" Type="String" MaxLength="125" FixedLength="false" Unicode="false" />
+          <Property Name="City" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ZipCode" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="PhoneNumber" Type="String" MaxLength="18" FixedLength="false" Unicode="false" />
+          <Property Name="EmailId" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastLogin" Type="DateTime" Precision="3" />
+          <Property Name="Verified" Type="Boolean" />
+          <Property Name="Active" Type="Boolean" />
+          <Property Name="ProfileImageID" Type="Int64" />
+          <NavigationProperty Name="Products" Relationship="DesiOffersModel.FK_Product_Customer" FromRole="Customer" ToRole="Product" />
+          <NavigationProperty Name="TransactionLines" Relationship="DesiOffersModel.FK_TransactionLine_Customer" FromRole="Customer" ToRole="TransactionLine" />
+        </EntityType>
+        <Association Name="FK_Product_Category">
+          <End Type="DesiOffersModel.Category" Role="Category" Multiplicity="0..1" />
+          <End Type="DesiOffersModel.Product" Role="Product" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Category">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Product">
+              <PropertyRef Name="CategoryID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Product_Customer">
+          <End Type="DesiOffersModel.Customer" Role="Customer" Multiplicity="0..1" />
+          <End Type="DesiOffersModel.Product" Role="Product" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Customer">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Product">
+              <PropertyRef Name="CustomerID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="ImageStore">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FilePath" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="FilePathRootID" Type="Int64" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Products" Relationship="DesiOffersModel.FK_Product_ImageStore" FromRole="ImageStore" ToRole="Product" />
+          <NavigationProperty Name="ProductImages" Relationship="DesiOffersModel.FK_ProductImages_ImageStore" FromRole="ImageStore" ToRole="ProductImage" />
+        </EntityType>
+        <Association Name="FK_Product_ImageStore">
+          <End Type="DesiOffersModel.ImageStore" Role="ImageStore" Multiplicity="0..1" />
+          <End Type="DesiOffersModel.Product" Role="Product" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ImageStore">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Product">
+              <PropertyRef Name="PrimaryImageStoreID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductImages_ImageStore">
+          <End Type="DesiOffersModel.ImageStore" Role="ImageStore" Multiplicity="1" />
+          <End Type="DesiOffersModel.ProductImage" Role="ProductImage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ImageStore">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ProductImage">
+              <PropertyRef Name="ImageStoreID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="TransactionLine">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProductID" Type="Int64" />
+          <Property Name="CategoryID" Type="Int64" />
+          <Property Name="CustomerID" Type="Int64" />
+          <Property Name="Title" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Name="Description" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="Condition" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Name="SellerID" Type="Int64" />
+          <Property Name="OfferPrice" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="TransactionType" Type="String" MaxLength="2" FixedLength="true" Unicode="false" />
+          <Property Name="Sold" Type="Boolean" Nullable="false" />
+          <Property Name="SoldDate" Type="DateTime" Precision="3" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="UpdateDate" Type="DateTime" Precision="3" />
+          <Property Name="Active" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Customer" Relationship="DesiOffersModel.FK_TransactionLine_Customer" FromRole="TransactionLine" ToRole="Customer" />
+          <NavigationProperty Name="Product" Relationship="DesiOffersModel.FK_TransactionLine_Product" FromRole="TransactionLine" ToRole="Product" />
+        </EntityType>
+        <Association Name="FK_TransactionLine_Customer">
+          <End Type="DesiOffersModel.Customer" Role="Customer" Multiplicity="0..1" />
+          <End Type="DesiOffersModel.TransactionLine" Role="TransactionLine" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Customer">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="TransactionLine">
+              <PropertyRef Name="CustomerID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TransactionLine_Product">
+          <End Type="DesiOffersModel.Product" Role="Product" Multiplicity="0..1" />
+          <End Type="DesiOffersModel.TransactionLine" Role="TransactionLine" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="TransactionLine">
+              <PropertyRef Name="ProductID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="DesiOffersModelStoreContainer" CdmEntityContainer="DesiOfferEntities">
+          <EntitySetMapping Name="ZipCodes">
+            <EntityTypeMapping TypeName="DesiOffersModel.ZipCode">
+              <MappingFragment StoreEntitySet="ZipCode">
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+                <ScalarProperty Name="TotalWages" ColumnName="TotalWages" />
+                <ScalarProperty Name="EstimatedPopulation" ColumnName="EstimatedPopulation" />
+                <ScalarProperty Name="TaxReturnsFiled" ColumnName="TaxReturnsFiled" />
+                <ScalarProperty Name="Decommisioned" ColumnName="Decommisioned" />
+                <ScalarProperty Name="Location" ColumnName="Location" />
+                <ScalarProperty Name="LocationText" ColumnName="LocationText" />
+                <ScalarProperty Name="Country" ColumnName="Country" />
+                <ScalarProperty Name="WorldRegion" ColumnName="WorldRegion" />
+                <ScalarProperty Name="Zaxis" ColumnName="Zaxis" />
+                <ScalarProperty Name="Yaxis" ColumnName="Yaxis" />
+                <ScalarProperty Name="Xaxis" ColumnName="Xaxis" />
+                <ScalarProperty Name="Long" ColumnName="Long" />
+                <ScalarProperty Name="Lat" ColumnName="Lat" />
+                <ScalarProperty Name="LocationType" ColumnName="LocationType" />
+                <ScalarProperty Name="State" ColumnName="State" />
+                <ScalarProperty Name="City" ColumnName="City" />
+                <ScalarProperty Name="ZipCodeType" ColumnName="ZipCodeType" />
+                <ScalarProperty Name="Zipcode" ColumnName="Zipcode" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="FilePathRoots">
+            <EntityTypeMapping TypeName="DesiOffersModel.FilePathRoot">
+              <MappingFragment StoreEntitySet="FilePathRoot">
+                <ScalarProperty Name="AllowRead" ColumnName="AllowRead" />
+                <ScalarProperty Name="AllowWrite" ColumnName="AllowWrite" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="FullPath" ColumnName="FullPath" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Products">
+            <EntityTypeMapping TypeName="DesiOffersModel.Product">
+              <MappingFragment StoreEntitySet="Product">
+                <ScalarProperty Name="PrimaryImageStoreID" ColumnName="PrimaryImageStoreID" />
+                <ScalarProperty Name="MinPrice" ColumnName="MinPrice" />
+                <ScalarProperty Name="OfferPrice" ColumnName="OfferPrice" />
+                <ScalarProperty Name="Tags" ColumnName="Tags" />
+                <ScalarProperty Name="CustomerID" ColumnName="CustomerID" />
+                <ScalarProperty Name="CategoryID" ColumnName="CategoryID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ProductImages">
+            <EntityTypeMapping TypeName="DesiOffersModel.ProductImage">
+              <MappingFragment StoreEntitySet="ProductImages">
+                <ScalarProperty Name="Active" ColumnName="Active" />
+                <ScalarProperty Name="ImageStoreID" ColumnName="ImageStoreID" />
+                <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Categories">
+            <EntityTypeMapping TypeName="DesiOffersModel.Category">
+              <MappingFragment StoreEntitySet="Category">
+                <ScalarProperty Name="Active" ColumnName="Active" />
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="ParentID" ColumnName="ParentID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Customers">
+            <EntityTypeMapping TypeName="DesiOffersModel.Customer">
+              <MappingFragment StoreEntitySet="Customer">
+                <ScalarProperty Name="ProfileImageID" ColumnName="ProfileImageID" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+                <ScalarProperty Name="Verified" ColumnName="Verified" />
+                <ScalarProperty Name="LastLogin" ColumnName="LastLogin" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="EmailId" ColumnName="EmailId" />
+                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+                <ScalarProperty Name="ZipCode" ColumnName="ZipCode" />
+                <ScalarProperty Name="City" ColumnName="City" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ImageStores">
+            <EntityTypeMapping TypeName="DesiOffersModel.ImageStore">
+              <MappingFragment StoreEntitySet="ImageStore">
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="FilePathRootID" ColumnName="FilePathRootID" />
+                <ScalarProperty Name="FilePath" ColumnName="FilePath" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TransactionLines">
+            <EntityTypeMapping TypeName="DesiOffersModel.TransactionLine">
+              <MappingFragment StoreEntitySet="TransactionLine">
+                <ScalarProperty Name="Active" ColumnName="Active" />
+                <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="SoldDate" ColumnName="SoldDate" />
+                <ScalarProperty Name="Sold" ColumnName="Sold" />
+                <ScalarProperty Name="TransactionType" ColumnName="TransactionType" />
+                <ScalarProperty Name="OfferPrice" ColumnName="OfferPrice" />
+                <ScalarProperty Name="SellerID" ColumnName="SellerID" />
+                <ScalarProperty Name="Condition" ColumnName="Condition" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="CustomerID" ColumnName="CustomerID" />
+                <ScalarProperty Name="CategoryID" ColumnName="CategoryID" />
+                <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

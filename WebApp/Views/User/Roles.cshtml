@@ -1,0 +1,48 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Roles";
+}
+
+@Styles.Render("~/Content/jsGrid")
+@Scripts.Render("~/Scripts/jsGrid")
+
+<h2>Roles</h2>
+
+<div id="rolesGrid"></div>
+
+<script>
+    $("#rolesGrid").jsGrid({
+        width: "100%",
+        height: "800px",
+
+        filtering: true,
+        inserting: true,
+        editing: true,
+        sorting: true,
+        paging: true,
+        autoload: true,
+
+        controller: {
+            loadData: function (filter) {
+
+                return $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("ListRoles")',
+                    data: filter,
+                    dataType: "json"
+                });
+            }
+        },
+
+        noDataContent: "No Roles found",
+        loadMessage: "Loading Roles...",
+        pagesize: 25,
+
+        fields: [
+            { name: "Id", type: "text", width: 60 },
+            { name: "Name", type: "text", width: 100 },
+            { name: "Description", type: "text", title: "Email", width: 100 },
+            { type: "control" }
+        ]
+    });
+</script>

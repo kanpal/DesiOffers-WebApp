@@ -1,0 +1,10 @@
+﻿@model WebLogic.ViewModels.SearchViewModel
+
+@{
+    ViewBag.Title = "Search";
+}
+
+<h3>For Sale: @if (!string.IsNullOrWhiteSpace(Model.SearchText)) {  <text>for @Model.SearchText </text> }  </h3>
+
+@Html.Partial("SearchList", Model)
+

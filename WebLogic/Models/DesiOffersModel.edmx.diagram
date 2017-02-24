@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="babc00eb35e149f7add780830526d95e" Name="MainDiagram">
+        <EntityTypeShape EntityType="DesiOffersModel.ZipCode" Width="1.5" PointX="10.125" PointY="0.875" />
+        <EntityTypeShape EntityType="DesiOffersModel.FilePathRoot" Width="1.5" PointX="2.75" PointY="0.75" />
+        <EntityTypeShape EntityType="DesiOffersModel.Product" Width="1.5" PointX="2.875" PointY="4.375" />
+        <EntityTypeShape EntityType="DesiOffersModel.ProductImage" Width="1.5" PointX="8" PointY="4.5" />
+        <AssociationConnector Association="DesiOffersModel.FK_ProductImages_Product" />
+        <EntityTypeShape EntityType="DesiOffersModel.Category" Width="1.5" PointX="0.5" PointY="6.875" />
+        <EntityTypeShape EntityType="DesiOffersModel.Customer" Width="1.5" PointX="0.5" PointY="1.25" />
+        <AssociationConnector Association="DesiOffersModel.FK_Product_Category" />
+        <AssociationConnector Association="DesiOffersModel.FK_Product_Customer" />
+        <EntityTypeShape EntityType="DesiOffersModel.ImageStore" Width="1.5" PointX="7.375" PointY="0.75" />
+        <AssociationConnector Association="DesiOffersModel.FK_Product_ImageStore" />
+        <AssociationConnector Association="DesiOffersModel.FK_ProductImages_ImageStore" />
+        <EntityTypeShape EntityType="DesiOffersModel.TransactionLine" Width="1.5" PointX="5.25" PointY="0.75" />
+        <AssociationConnector Association="DesiOffersModel.FK_TransactionLine_Customer" />
+        <AssociationConnector Association="DesiOffersModel.FK_TransactionLine_Product" />
+        </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

@@ -1,0 +1,25 @@
+﻿@{
+    ViewBag.Title = "Administration";
+}
+<h2>@ViewBag.Title.</h2>
+<h3>@ViewBag.Message</h3>
+
+<hr />
+<div class="row">
+    <div class="col-lg-12 col-sm-12 col-xs-12"><h4>Core Maintenance</h4></div>    
+</div>
+<div class="row">
+    <div class="col-lg-3 col-sm-6 col-xs-12">@Html.ActionLink("Manage Products", "Index", new { controller = "Product" }, new { @class = "btn btn-default" })</div>
+    <div class="col-lg-3 col-sm-6 col-xs-12">@Html.ActionLink("Manage Customers", "Index", new { controller = "Customer" }, new { @class = "btn btn-default" })</div>
+    <div class="col-lg-3 col-sm-6 col-xs-12">@Html.ActionLink("Manage Images", "Index", new { controller = "ImageStore" }, new { @class = "btn btn-default" })</div>    
+</div>
+
+<div class="row">
+    <div class="col-lg-12 col-sm-12 col-xs-12"><h4>System Maintenance</h4></div>        
+</div>
+
+<div class="row">
+    <div class="col-lg-3 col-sm-6 col-xs-12">@Html.ActionLink("Manage Users", "Index", new { controller = "User" }, new { @class = "btn btn-default" })</div>
+    <div class="col-lg-3 col-sm-6 col-xs-12">@Html.ActionLink("Manage Roles", "Roles", new { controller = "User" }, new { @class = "btn btn-default" })</div>
+    <div class="col-lg-3 col-sm-6 col-xs-12">@Html.ActionLink("Manage Claims", "Claims", new { controller = "User" }, new { @class = "btn btn-default" })</div>
+</div>

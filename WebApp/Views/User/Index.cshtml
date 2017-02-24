@@ -1,0 +1,70 @@
+﻿@*using MVC.Controls.Grid*@
+@*MVC.Controls.MVCControlsScriptManager.Instance.RegisterScriptsAndStyles()*@
+
+@{
+    ViewBag.Title = "Users";
+}
+
+@Styles.Render("~/Content/jsGrid")
+@Scripts.Render("~/Scripts/jsGrid")
+
+<h2>Users</h2>
+
+<div id="usersGrid"></div>
+
+@*
+    <div class="row">
+
+        @(Html.Grid(new GridControl()
+                .SetName("Users")
+                .SetPageSize(10)
+                .SetIsAutoSize(true)
+                .SetListUrl("User/ListUsers")
+                .SetHeight("200")
+                .AddColumn(new GridColumnModel("Id").SetAsPrimaryKey())
+                .AddColumn(new GridColumnModel("UserName"))
+                .AddColumn(new GridColumnModel("Email"))
+                .AddColumn(new GridColumnModel("PhoneNumber"))
+                //.UpdateDefaultPager(pager => pager.ShowAdd(true).ShowEdit(true).ShowDel(true))
+                ))
+    </div>
+*@
+
+<script>
+    $("#usersGrid").jsGrid({
+        width: "100%",
+        height: "800px",
+
+        filtering: true,
+        inserting: true,
+        editing: true,
+        sorting: true,
+        paging: true,
+        autoload: true,
+
+        controller: {
+            loadData: function (filter) {
+
+                return $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("ListUsers")',
+                    data: filter,
+                    dataType: "json"
+                });
+            }
+        },
+
+        noDataContent: "No Users found",
+        loadMessage: "Loading Users...",
+        pagesize: 25,
+
+        fields: [
+            { name: "Id", type: "text", width: 130 },
+            { name: "UserName", type: "text", width: 100 },
+            { name: "Email", type: "text", title: "Email", width: 100 },
+            { name: "PhoneNumber", type: "text", title: "Phone #", width: 100 },
+            { type: "control" }
+        ]
+    });
+
+</script>
