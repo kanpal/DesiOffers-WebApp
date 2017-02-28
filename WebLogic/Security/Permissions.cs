@@ -12,6 +12,7 @@ namespace WebLogic.Security
         public const string CreateProducts = "products.create";
         public const string EditProducts = "products.edit";
         public const string DeleteProducts = "products.delete";
+        public const string ProductMakeOffer = "products.makoffer";
 
         // Customers
         public const string CreateCustomers = "customers.create";

@@ -19,6 +19,8 @@ namespace WebApp
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
+            WebApiConfig.RegisterCustomRoutes(RouteTable.Routes);
+
             UnityFactory unityFactory = new UnityFactory();
             unityFactory.RegisterContainer();
         }        

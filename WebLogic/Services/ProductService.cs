@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using WebLogic.DataModels;
 using WebLogic.Framework;
 using WebLogic.Interfaces;
 using WebLogic.Models;
@@ -122,13 +123,13 @@ namespace WebLogic.Services
             return true;
         }
 
-        public long? CreateOffer(long id, decimal price)
+        public long? CreateOffer(long id, decimal price, long customerId)
         {
             var entities = GeneralService.GetDbEntities();
             Product product = entities.Products.FirstOrDefault(p => p.ID == id);
             if (product == null)
                 return null;
-            long customerId = 1;        // TODO: Get it from the current user
+            product.OfferPrice = price;
             TransactionLine transaction = new TransactionLine
             {
                 ProductID = id,
@@ -144,6 +145,15 @@ namespace WebLogic.Services
             return transaction.ID;
         }
 
+        public TransactionModel GetLeadingOffer(long productId)
+        {
+            var entities = GeneralService.GetDbEntities();
+            TransactionLine transaction = entities.TransactionLines.Where(t => t.ProductID == productId).OrderByDescending(p => p.OfferPrice).FirstOrDefault();
+            if (transaction == null)
+                return null;
+            return new TransactionModel(transaction);
+        }
+
         public IEnumerable<TransactionViewModel> ListTransactions(long productId)
         {
             var entities = GeneralService.GetDbEntities();
@@ -155,5 +165,25 @@ namespace WebLogic.Services
             }
             return transactionViewModels;
         }
+
+        public long? AddImage(long productId, long imageStoreId)
+        {
+            var entities = GeneralService.GetDbEntities();
+            var product = GeneralService.GetDbEntities().Products.Where(p => p.ID == productId).FirstOrDefault();
+            if (product == null)
+                return null;
+            if (!product.PrimaryImageStoreID.HasValue || product.PrimaryImageStoreID.Value == 0)
+                product.PrimaryImageStoreID = imageStoreId;
+            var productImage = entities.ProductImages.Add(new ProductImage
+            {
+                ProductID = productId,
+                ImageStoreID = imageStoreId
+            });
+            entities.SaveChanges();
+            if (productImage != null) 
+                return productImage.ID;
+            return null;
+        }
+
     }
 }

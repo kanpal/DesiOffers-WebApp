@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using WebLogic.Security;
 using WebLogic.Services;
 
 namespace WebApp.Controllers
@@ -23,6 +24,17 @@ namespace WebApp.Controllers
         public ActionResult Details(int id)
         {
             ProductService productService = GeneralService.GetProductService();
+            ActiveUser user = ActiveUser.GetActiveUser();
+            if (user.IsAuthenticated)
+            {
+                var transaction = productService.GetLeadingOffer(id);
+                if (transaction == null)
+                    ViewBag.Message = "There are no offers yet!";
+                else
+                {
+                    ViewBag.Message = (transaction.CustomerID == user.CustomerId) ? "You are leading this offer!" : "You are not leading!";
+                }
+            }
             return View(productService.Get(id));
         }
 
@@ -96,18 +108,25 @@ namespace WebApp.Controllers
 
         // POST: Product/MakeOffer
         [HttpPost]
-        public ActionResult MakeOffer(int id, string offerPrice)
+        public ActionResult MakeOffer(int id, string offerPrice, long? customerId)
         {
-            string message = string.Empty;
+            string message = string.Empty, newPrice = offerPrice;
             bool result = true;
             try
             {
+                if ((customerId ?? 0) == 0)
+                    customerId = ActiveUser.GetActiveUser().CustomerId;
+
+                if (!customerId.HasValue || customerId.Value == 0)
+                    throw new Exception("You are not authorized to submit an offer.");
+
                 ProductService productService = GeneralService.GetProductService();
                 Decimal price = 0;
                 if (Decimal.TryParse(offerPrice, out price))
                 {
-                    productService.CreateOffer(id, price);
+                    productService.CreateOffer(id, price, customerId.Value);
                     message = string.Format("Offer for ${0:2} submitted.", offerPrice);
+                    newPrice = price.ToString("C");
                 }
                 else
                 {
@@ -120,7 +139,7 @@ namespace WebApp.Controllers
                 result = false;
             }
 
-            return Json(new { result = result, message = message });
+            return Json(new { result = result, message = message, newPrice = newPrice });
             //return RedirectToAction("Details", new { id = id });
         }
 

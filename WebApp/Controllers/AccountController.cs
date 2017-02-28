@@ -10,6 +10,9 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using WebApp.Models;
 using WebLogic.Framework;
+using WebLogic.Authentication;
+using WebLogic.Security;
+using WebLogic.ViewModels;
 
 namespace WebApp.Controllers
 {
@@ -18,6 +21,7 @@ namespace WebApp.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+        private WebSignInManager _webSignInManager;
 
         public AccountController()
         {
@@ -38,6 +42,16 @@ namespace WebApp.Controllers
             private set 
             { 
                 _signInManager = value; 
+            }
+        }
+
+        public WebSignInManager WebSignInManager
+        {
+            get
+            {
+                if (_webSignInManager == null)
+                    _webSignInManager = HttpContext.GetOwinContext().Get<WebSignInManager>();
+                return _webSignInManager;
             }
         }
 
@@ -77,9 +91,14 @@ namespace WebApp.Controllers
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, change to shouldLockout: true
             var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
+
+            if (result == SignInStatus.Failure)
+                result = await WebSignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, false);
+
             switch (result)
             {
                 case SignInStatus.Success:
+                    UserLoggedIn();
                     return RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:
                     return View("Lockout");
@@ -334,6 +353,7 @@ namespace WebApp.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
+                    UserLoggedIn();
                     return RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:
                     return View("Lockout");
@@ -376,6 +396,7 @@ namespace WebApp.Controllers
                     if (result.Succeeded)
                     {
                         await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+                        UserLoggedIn();
                         return RedirectToLocal(returnUrl);
                     }
                 }
@@ -404,6 +425,14 @@ namespace WebApp.Controllers
             return View();
         }
 
+        //
+        // GET: /Account/Profile
+        public ActionResult Profile()
+        {
+            UserViewModel viewModel = new UserViewModel();
+            return View(viewModel);
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -419,10 +448,45 @@ namespace WebApp.Controllers
                     _signInManager.Dispose();
                     _signInManager = null;
                 }
+
+                if (_webSignInManager != null)
+                {
+                    _webSignInManager.Dispose();
+                    _webSignInManager = null;
+                }
             }
 
             base.Dispose(disposing);
         }
+
+        #region Web API        
+        [HttpPost]
+        [AllowAnonymous]
+        public JsonResult ApiLogon(string userName, string password)
+        {
+            if (string.IsNullOrWhiteSpace(userName))
+                return Json(new { result = false, message = "UserName is required." });
+            if (string.IsNullOrWhiteSpace(password))
+                return Json(new { result = false, message = "Password is required." });
+
+            var result = WebSignInManager.PasswordSignIn(userName, password, false, false);
+            switch (result)
+            {
+                case SignInStatus.Success:
+                    UserLoggedIn();
+                    return Json(new { result = true, message = "Successful" } );
+                case SignInStatus.LockedOut:
+                    return Json(new { result = false, message = "User is Locked Out." });
+                case SignInStatus.RequiresVerification:
+                    return Json(new { result = false, message = "User Requires verification." });
+                case SignInStatus.Failure:
+                default:
+                    // If the user does not have an account, then prompt the user to create an account
+                    return Json(new { result = false, message = "User invalid or not found." });
+            }
+
+        }
+        #endregion
 
         #region Helpers
         // Used for XSRF protection when adding external logins
@@ -451,6 +515,20 @@ namespace WebApp.Controllers
                 return Redirect(returnUrl);
             }
             return RedirectToAction("Index", "Home");
+        }
+
+        internal void UserLoggedIn()
+        {
+            ActiveUser activeUser = new ActiveUser();
+            activeUser.InitFromThread();
+            activeUser.SetInSession();
+        }
+
+        internal void UserLoggedOut()
+        {
+            ActiveUser activeUser = ActiveUser.GetActiveUser();
+            if (activeUser != null)
+                activeUser.ClearInSession();
         }
 
         internal class ChallengeResult : HttpUnauthorizedResult

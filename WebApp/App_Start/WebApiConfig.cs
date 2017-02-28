@@ -2,11 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
+using System.Web.Mvc;
+using System.Web.Routing;
 
 namespace WebApp
 {
     public static class WebApiConfig
     {
+        private static readonly string[] ControllerNamespaces = new[] { "WebApp.Controllers" };
+
+
         public static void Register(HttpConfiguration config)
         {
             // Web API configuration and services
@@ -14,6 +19,13 @@ namespace WebApp
             // Web API routes
             config.MapHttpAttributeRoutes();
 
+            // Account API
+/*            config.Routes.MapHttpRoute(
+                name: "AccountApiLogon",
+                routeTemplate: "api/account/logon",
+                defaults: new { controller = "Account", action = "ApiLogon" }
+            );
+*/
             // Customer API
             config.Routes.MapHttpRoute(
                 name: "CustomerApi",
@@ -42,6 +54,16 @@ namespace WebApp
                 defaults: new { id = RouteParameter.Optional }
             );
 
+        }
+
+        public static void RegisterCustomRoutes(RouteCollection routes)
+        {
+            routes.MapRoute(
+                    "AccountApiLogon",
+                    "api/account/logon",
+                    new { controller = "Account", action = "ApiLogon" },
+                    ControllerNamespaces
+            );
         }
     }
 }

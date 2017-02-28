@@ -6,6 +6,8 @@ using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.Google;
 using Owin;
 using WebApp.Models;
+using WebLogic.Authentication;
+using Microsoft.Owin.Security.OAuth;
 
 namespace WebApp
 {
@@ -18,6 +20,10 @@ namespace WebApp
             app.CreatePerOwinContext(ApplicationDbContext.Create);
             app.CreatePerOwinContext<ApplicationUserManager>(ApplicationUserManager.Create);
             app.CreatePerOwinContext<ApplicationSignInManager>(ApplicationSignInManager.Create);
+            app.CreatePerOwinContext<WebUserManager>(WebUserManager.Create);
+            app.CreatePerOwinContext<WebSignInManager>(WebSignInManager.Create);
+
+            WebLogic.ModuleRegistration.ConfigureAuth(app);
 
             // Enable the application to use a cookie to store information for the signed in user
             // and to use a cookie to temporarily store information about a user logging in with a third party login provider
@@ -63,6 +69,29 @@ namespace WebApp
                 ClientId = "833469290459-dd157mvrq8si56jgr44k5jr37am6baa8.apps.googleusercontent.com",
                 ClientSecret = "ACTQUHmJ7S0qjQSS_5MgL0Lj"
             });
+
+            // Configure OAuth
+            ConfigureOAuth(app);
         }
-    }
+
+        /// <summary>
+        /// KP: Added 2/27/17
+        /// </summary>
+        /// <param name="app"></param>
+        public void ConfigureOAuth(IAppBuilder app)
+        {
+            OAuthAuthorizationServerOptions OAuthServerOptions = new OAuthAuthorizationServerOptions()
+            {
+                AllowInsecureHttp = true,
+                TokenEndpointPath = new PathString("/token"),
+                AccessTokenExpireTimeSpan = TimeSpan.FromDays(1),
+                Provider = new WebUserAuhtorizationProvider()
+            };
+
+            // Token Generation
+            app.UseOAuthAuthorizationServer(OAuthServerOptions);
+            app.UseOAuthBearerAuthentication(new OAuthBearerAuthenticationOptions());
+
+        }
+    }  
 }

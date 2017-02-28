@@ -10,6 +10,7 @@ namespace WebLogic.Security
     public static class CustomClaimTypes
     {
         public const string Permission = "user.permission";
+        public const string CustomerId = "customer.id";
     }
     public class SecurityService
     {

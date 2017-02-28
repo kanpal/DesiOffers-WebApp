@@ -1,5 +1,7 @@
 ﻿@model WebLogic.ViewModels.ProductViewModel
 
+@using WebLogic.Security;
+
 @{
     ViewBag.Title = "Product Details";
 }
@@ -31,110 +33,149 @@
             </dt>
 
             <dd>
-                @Html.DisplayFor(model => model.CustomerName)
+                @Html.ActionLink(Model.CustomerName, "Details", "Customer", new { id = Model.CustomerID }, null)                
             </dd>
 
             <dt>
-                @Html.DisplayNameFor(model => model.OfferPrice):
+                @Html.DisplayNameFor(model => model.MinPrice):
             </dt>
 
             <dd>
-                <b>$@Html.DisplayFor(model => model.OfferPrice)</b>
+                <b>$@Html.DisplayFor(model => model.MinPrice)</b>
+            </dd>
+
+            <dt>
+                <h3> @Html.DisplayNameFor(model => model.OfferPrice):</h3>
+            </dt>
+
+            <dd>
+                <h2><b><span id="currentPrice" style="color:forestgreen">$@Html.DisplayFor(model => model.OfferPrice)</span></b></h2>
             </dd>
 
         </dl>
         <span>
-            <button value="makeOffer" id="makeOffer" class="btn btn-default">Make an Offer $</button>
-            <button value="askQuestion" class="btn btn-default">Ask a Question ?</button>
-            <button value="addToList" class="btn btn-default">Add to List &hearts;</button>
+            @if (User.Identity.IsAuthenticated)
+            {
+                <button value="makeOffer" id="makeOffer" class="btn btn-default">Make an Offer $</button>
+                <button value="addToList" class="btn btn-default">Add to List &hearts;</button>
+            }
+            else
+            {
+                <button value="logIn" id="logIn" class="btn btn-default" onclick="return logInUser();">Log in to Make an Offer $</button>
+            }
+            <button value="askQuestion" class="btn btn-default">Ask a Question ?</button>            
         </span>
 
-        <div id="offerWindow" style="display:none;">
-            @*form method="post" action="@Url.Action("MakeOffer", new { id = Model.ID } )"*@
-                Offer Price: <input type="text" id="offerPrice" /> <button class="btn btn-default" id="submitOffer">Submit Offer</button>
-            @*</form>*@
+        <div>
+            <span style="color:red;" id="message">@ViewBag.Message</span>
         </div>
     </div>
 </div>
+
+<div id="offerWindow" style="display:none;">
+    @*form method="post" action="@Url.Action("MakeOffer", new { id = Model.ID } )"*@
+    Offer Price: <input type="text" id="offerPrice" /> <button class="btn btn-default" id="submitOffer">Submit Offer</button>
+    @*</form>*@
+</div>
+
 <p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
     @Html.ActionLink("Back to List", "Index")
 </p>
 
-<span style="color:red;" id="message"></span>
+<hr />
+@if (User.Identity.IsAuthenticated)
+{
 <h4>Offers/Transactions</h4>
 
 <div id="transctionsGrid"></div>
+}
 
 <script type="text/javascript">
+
     $(document).ready(function () {
-        $("#offerWindow").dialog({
-            autoOpen: false,
-            title: 'Make an Offer',
-            width: 500,
-            height: 'auto',
-            modal: true
-        });
+        @if (User.Identity.IsAuthenticated)
+        { 
+            <text>
+            $("#offerWindow").dialog({
+                    autoOpen: false,
+                title: 'Make an Offer',
+                width: 500,
+                height: 'auto',
+                modal: true
+            });
 
-        $("#makeOffer").button().on("click", function () {
-            $("#offerWindow").dialog("open");
-        });
+            $("#makeOffer").button().on("click", function() {
+                $("#offerWindow").dialog("open");
+                    });
 
-        $("#submitOffer").button().on("click", submitOffer);
+            $("#submitOffer").button().on("click", submitOffer);
+            </text>
+        }
     });
+
+    function logInUser(e) {
+        window.location.href = '@Url.Action("LogIn", "Account", new { returnUrl = Url.Action("Details", "Product", new { id = Model.ID }) })';
+    }
 
     function submitOffer() {
         $("#offerWindow").dialog("close");
         $.ajax({
             method: "post",
             url: '@Url.Action("MakeOffer")',
-            data: { offerPrice: $("#offerPrice").val(), id: @Model.ID }
+            data: { offerPrice: $("#offerPrice").val(), id: @Model.ID, customerId: @ActiveUser.GetActiveUser().CustomerId }
         })
         .done(function (data) {
             $("#message").html(data.message);
             if (data.result) {
+                $("#currentPrice").html(data.newPrice);
                 // Refresh the transaction grid
-                $("#transctionsGrid").jsGrid("render");
+                $("#transctionsGrid").jsGrid("render");                
             }
         });
     }
 
-    $("#transctionsGrid").jsGrid({
-        width: "100%",
-        height: "200px",
+    @if (User.Identity.IsAuthenticated)
+    { 
+        <text>
+        $("#transctionsGrid").jsGrid({
+                width: "100%",
+            height: "200px",
 
-        filtering: false,
-        //inserting: true,
-        //editing: true,
-        sorting: false,
-        paging: true,
-        autoload: true,
+            filtering: false,
+            //inserting: true,
+            //editing: true,
+            sorting: false,
+            paging: true,
+            autoload: true,
 
-        controller: {
-            loadData: function (filter) {
+            controller: {
+                    loadData: function(filter) {
 
-                return $.ajax({
-                    type: "POST",
-                    url: '@Url.Action("ListTransactions")',
-                    data: { id: @Model.ID },
-                    dataType: "json"
-                });
-            }
-        },
+                            return $.ajax({
+                            type: "POST",
+                        url: '@Url.Action("ListTransactions")',
+                        data: { id: @Model.ID },
+                        dataType: "json"
+                            });
+                        }
+                    },
 
-        noDataContent: "No Transactions found",
-        loadMessage: "Loading Transactions",
-        pagesize: 5,
+            noDataContent: "No Transactions found",
+            loadMessage: "Loading Transactions",
+            pagesize: 5,
 
-        fields: [
-            { name: "ID", type: "number", width: 30 },
-            { name: "Type", type: "text", width: 100 },
-            //{ name: "Type", type: "select", items: categories, valueField: "Value", textField: "Text", width: 70 },
-            { name: "CustomerName", type: "text", title: "Customer", width: 100 },
-            //{ name: "Description", type: "text", width: 150 },
-            { name: "PriceFormatted", type: "text", title: "Offer Price", width: 50 },
-            { name: "Date", type: "text", title: "Date", width: 90 }
-        ]
-    });
+            fields: [
+                { name: "ID", type: "number", width: 30 },
+                { name: "Type", type: "text", width: 100 },
+                //{ name: "Type", type: "select", items: categories, valueField: "Value", textField: "Text", width: 70 },
+                { name: "CustomerName", type: "text", title: "Customer", width: 100 },
+                //{ name: "Description", type: "text", width: 150 },
+                { name: "PriceFormatted", type: "text", title: "Offer Price", width: 50 },
+                { name: "Date", type: "text", title: "Date", width: 90 }
+            ]
+        });
+        </text>
+    }
 
 </script>

@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using WebLogic.Framework;
 using WebLogic.Interfaces;
 using WebLogic.Models;
@@ -117,6 +118,16 @@ namespace WebLogic.Services
                 return false;
             }
             return true;
+        }
+
+        public ImageStoreViewModel AddProductImage(long productId, HttpPostedFileBase imageFile)
+        {
+            string fileName = Path.GetFileName(imageFile.FileName);
+            ImageStoreViewModel imageModel = AddNew(fileName);
+            imageFile.SaveAs(imageModel.FullPath);
+            var productService = GeneralService.GetProductService();
+            productService.AddImage(productId, imageModel.ID);
+            return imageModel;
         }
     }
 }

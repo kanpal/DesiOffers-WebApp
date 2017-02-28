@@ -1,6 +1,10 @@
 ﻿@using Microsoft.AspNet.Identity
+@using WebLogic.Security
+
 @if (Request.IsAuthenticated)
 {
+    var activeUser = ActiveUser.GetActiveUser();
+
     using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
     {
     @Html.AntiForgeryToken()
@@ -9,7 +13,26 @@
         <li>
             @Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })
         </li>
-        <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" title="Account">
+                <span class="fa fa-user" style="font-size:x-large;" aria-hidden="true"></span>
+            </a>
+            <ul class="dropdown-menu pull-right">
+                <li><a id="activeUserNameContainer">@User.Identity.GetUserName()</a></li>
+                <li>
+                    @if (activeUser.IsCustomer)
+                    {
+                        <text> @Html.ActionLink("Profile", "Details", "Customer", new { id = activeUser.CustomerId }, null)  </text>
+                    }
+                    else if (activeUser.IsSysAdmin)
+                    {
+                        <text> @Html.ActionLink("Profile", "Profile", "Account")  </text>
+                    }
+                </li>
+                <li role="separator" class="divider"></li>
+                <li><a href="javascript:document.getElementById('logoutForm').submit()">Log out</a></li>
+            </ul>
+        </li>
     </ul>
     }
 }

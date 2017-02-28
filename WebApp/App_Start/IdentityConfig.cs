@@ -14,6 +14,9 @@ using WebApp.Models;
 
 namespace WebApp
 {
+    /// <summary>
+    /// EmailService
+    /// </summary>
     public class EmailService : IIdentityMessageService
     {
         public Task SendAsync(IdentityMessage message)
@@ -23,6 +26,9 @@ namespace WebApp
         }
     }
 
+    /// <summary>
+    /// SmsService
+    /// </summary>
     public class SmsService : IIdentityMessageService
     {
         public Task SendAsync(IdentityMessage message)
@@ -32,7 +38,10 @@ namespace WebApp
         }
     }
 
-    // Configure the application user manager used in this application. UserManager is defined in ASP.NET Identity and is used by the application.
+    /// <summary>
+    /// ApplicationUserManager
+    ///     Configure the application user manager used in this application. UserManager is defined in ASP.NET Identity and is used by the application.
+    /// </summary>    
     public class ApplicationUserManager : UserManager<ApplicationUser>
     {
         public ApplicationUserManager(IUserStore<ApplicationUser> store)
@@ -88,7 +97,10 @@ namespace WebApp
         }
     }
 
-    // Configure the application sign-in manager which is used in this application.
+    /// <summary>
+    /// ApplicationSignInManager
+    ///     Configure the application sign-in manager which is used in this application.
+    /// </summary>
     public class ApplicationSignInManager : SignInManager<ApplicationUser, string>
     {
         public ApplicationSignInManager(ApplicationUserManager userManager, IAuthenticationManager authenticationManager)
